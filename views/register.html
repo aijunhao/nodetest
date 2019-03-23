@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/public/css/github.css">
+    <title>Sign in to Blog</title>
+
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
+
+</head>
+
+<body class="logged-out env-production page-responsive min-width-0 session-authentication">
+    <!-- logo -->
+    <div class="pt-6 pb-1 text-center">
+        <img src="/public/img/fluidicon.png" height="60">
+    </div>
+
+    <!-- 表单 -->
+    <div class="auth-form px-3" id="login">
+        <form id="register_form" method="post">
+            <div class="auth-form-header p-0">
+                <h1>Sign in to Blog</h1>
+            </div>
+
+            <div class="auth-form-body mt-3">
+                
+                <!-- 邮箱 -->
+                <label for="email">
+                    Email address
+                </label>
+                <input type="email" name="email" id="email" class="form-control input-block" autofocus="autofocus" />
+
+                <!-- 用户名 -->
+                <label for="username">
+                    Username
+                </label>
+                <input type="text" name="username" id="username" class="form-control input-block" />
+
+                <!-- 密码 -->
+                <label for="password">
+                    Password
+                </label>
+                <input type="password" name="password" id="password" class="form-control form-control input-block" />
+
+                <!-- 确认密码 -->
+                <label for="password">
+                    Password again
+                </label>
+                <input type="password" name="password_again" id="password_again" class="form-control form-control input-block" />
+                
+                <!-- 确定 -->
+                <input type="submit" name="submit" id="submit" value="Regist" class="btn btn-primary btn-block"/>
+            </div>
+        </form>
+
+        <p class="create-account-callout mt-3">
+                Had a Blog?
+            <a href="/login">Back to submit</a>.
+        </p>
+    </div>
+    
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        // 异步提交
+        $('#register_form').submit(function( e ) {
+            e.preventDefault()
+            if ($('#password').val() === $('#password_again').val()) {
+                var formData = $(this).serialize()
+                console.log(formData)
+                $.ajax({
+                    url: '/register',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    success: data => {
+                        console.log(data)
+                        var err_code = data.err_code
+                        if (err_code === 0) {
+                            // window.alert('注册成功！')
+                            // 前端重定向
+                            window.location.href = '/'
+                        } else if (err_code === 1) {
+                            window.alert('邮箱已存在！')
+                        } else if (err_code === 2) {
+                            window.alert('用户名已存在！')
+                        } else if (err_code === 500) {
+                        window.alert('服务器忙！')
+                        }
+                    }
+                })
+            } else {
+
+            }
+            
+        })
+    </script>
+</body>
+
+</html>
